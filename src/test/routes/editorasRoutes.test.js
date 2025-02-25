@@ -1,5 +1,6 @@
 import {
   afterEach, beforeEach, describe, expect,
+  test,
 } from '@jest/globals';
 import request from 'supertest';
 import app from '../../app.js';
@@ -58,12 +59,14 @@ describe('GET em /editoras/id', () => {
 });
 
 describe('PUT em /editoras/id', () => {
-  it('Deve alterar o campo nome', async () => {
+  test.each([
+    ['nome', { nome: 'Casa do Código' }],
+    ['cidade', { cidade: 'SP' }],
+    ['email', { email: 'cdc@email.com' }],
+  ])('Deve alterar o campo %s', async (chave, param) => {
     await request(app)
       .put(`/editoras/${idResposta}`)
-      .send({
-        nome: 'Casa do Código',
-      })
+      .send(param)
       .expect(204);
   });
 });
